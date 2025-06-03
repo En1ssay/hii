@@ -1,0 +1,200 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Message for Destiny</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            color: #4a1a2c;
+            text-align: center;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            text-shadow: 0 0 10px #ff6f61, 0 0 20px #ff6f61;
+            margin-bottom: 30px;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        .buttons {
+            display: flex;
+            gap: 25px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 1.5em;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #ff6f61;
+        }
+        #yesBtn {
+            background-color: #ff6f61;
+            color: white;
+            box-shadow: 0 0 10px #ff6f61;
+        }
+        #noBtn {
+            background-color: #b0bec5;
+            color: white;
+            box-shadow: 0 0 10px #b0bec5;
+        }
+        #response {
+            font-size: 2em;
+            text-shadow: 0 0 10px #ff6f61;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6f61"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+            background-size: cover;
+            animation: float 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .flower {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6f61"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79-4-4-4z"/></svg>');
+            background-size: cover;
+            animation: fall 3s linear forwards;
+            pointer-events: none;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ff6f61, 0 0 20px #ff6f61; }
+            to { text-shadow: 0 0 20px #ff6f61, 0 0 30px #ff6f61; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0.5; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 id="question">I love u Destiny, do u love me back?</h1>
+    <div class="buttons" id="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+    <div id="response"></div>
+    <script>
+        const noMessages = [
+            "are u sure",
+            "stop playing with me",
+            "say yes please",
+            "pleaseeee",
+            "u playing with my hearrt",
+            "c'mon Destiny, my heart's on the line",
+            "don't break me like this",
+            "gimme a chance, cutie",
+            "my heart says u love me too"
+        ];
+        let noIndex = 0;
+
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const responseDiv = document.getElementById('response');
+        const question = document.getElementById('question');
+        const buttons = document.getElementById('buttons');
+
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 1000);
+
+        // Create falling flowers on "Yes"
+        function createFlowers() {
+            for (let i = 0; i < 20; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = Math.random() * 2 + 2 + 's';
+                flower.style.animationDelay = Math.random() * 1 + 's';
+                document.body.appendChild(flower);
+                setTimeout(() => flower.remove(), 5000);
+            }
+        }
+
+        yesBtn.addEventListener('click', () => {
+            question.style.display = 'none';
+            buttons.style.display = 'none';
+            responseDiv.textContent = 'ahhhh cutie pie i knew it';
+            responseDiv.style.display = 'block';
+            createFlowers();
+        });
+
+        noBtn.addEventListener('click', () => {
+            noBtn.textContent = noMessages[noIndex];
+            noIndex = (noIndex + 1) % noMessages.length;
+        });
+    </script>
+</body>
+</html>
